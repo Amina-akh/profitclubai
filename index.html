@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>profitclubai academy — обучение заработку на нейросетях</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1554E0;
+    --blue-light: #4C8CFF;
+    --blue-pale: #7EACFF;
+    --dark: #0B1220;
+    --dark2: #10182E;
+    --text: #0B1220;
+    --text-secondary: #5B6478;
+    --text-muted: #8A94B8;
+    --border: #ECEFF5;
+    --bg: #ffffff;
+    --bg-soft: #F5F8FF;
+    --font-display: 'Manrope', 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; padding: 0;
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  section { position: relative; }
+  h1, h2, h3 { font-family: var(--font-display); }
+
+  ::selection { background: var(--blue-light); color: #fff; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(var(--blue-light), var(--blue)); border-radius: 10px; border: 2px solid var(--bg); }
+
+  /* ---------- Scroll progress ---------- */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--blue-light), var(--blue));
+    z-index: 200; transition: width .1s linear;
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  .reveal-stagger.in-view > * { opacity: 1; transform: translateY(0); }
+  .reveal-stagger > * { opacity: 0; transform: translateY(24px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .reveal-stagger > *:nth-child(1) { transition-delay: .02s; }
+  .reveal-stagger > *:nth-child(2) { transition-delay: .08s; }
+  .reveal-stagger > *:nth-child(3) { transition-delay: .14s; }
+  .reveal-stagger > *:nth-child(4) { transition-delay: .20s; }
+  .reveal-stagger > *:nth-child(5) { transition-delay: .26s; }
+  .reveal-stagger > *:nth-child(6) { transition-delay: .32s; }
+  .reveal-stagger > *:nth-child(7) { transition-delay: .38s; }
+  .reveal-stagger > *:nth-child(8) { transition-delay: .44s; }
+  .reveal-stagger > *:nth-child(9) { transition-delay: .50s; }
+  .reveal-stagger > *:nth-child(10) { transition-delay: .56s; }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border-bottom: 1px solid rgba(236,239,245,0.8);
+    transition: box-shadow .3s var(--ease), border-color .3s var(--ease);
+  }
+  header.scrolled { box-shadow: 0 8px 30px rgba(15,35,90,0.08); border-bottom-color: var(--border); }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 84px; transition: height .3s var(--ease);
+  }
+  header.scrolled .nav { height: 68px; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo .mark {
+    width: 44px; height: 44px; border-radius: 13px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 18px rgba(21,84,224,0.30);
+    transition: transform .3s var(--ease);
+  }
+  .logo:hover .mark { transform: rotate(-6deg) scale(1.06); }
+  .logo .mark svg { width: 24px; height: 24px; }
+  .logo .word { line-height: 1.05; }
+  .logo .word .top { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .logo .word .bottom { font-size: 12px; font-weight: 400; color: var(--text-muted); letter-spacing: 1.5px; text-transform: lowercase; }
+  .nav-links { display: flex; align-items: center; gap: 8px; }
+  .nav-links a {
+    position: relative; font-size: 14px; font-weight: 600; color: var(--text-secondary);
+    transition: color .2s; padding: 8px 14px; border-radius: 100px;
+  }
+  .nav-links a:hover { color: var(--blue); background: rgba(76,140,255,0.08); }
+  .nav-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    color: #fff; font-size: 15px; font-weight: 700;
+    padding: 12px 22px; border-radius: 100px;
+    box-shadow: 0 10px 22px rgba(21,84,224,0.28);
+    border: none; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(21,84,224,0.38); }
+  .burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+  .burger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: transform .2s, opacity .2s; }
+  .mobile-menu { display: none; flex-direction: column; gap: 4px; padding: 12px 24px 20px; border-top: 1px solid var(--border); background: #fff; }
+  .mobile-menu a { padding: 12px 0; font-size: 16px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); }
+  .mobile-menu.open { display: flex; }
+
+  /* ---------- Buttons (shared) ---------- */
+  .btn-primary, .btn-secondary {
+    position: relative; overflow: hidden; isolation: isolate;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: translateX(-120%) skewX(-15deg);
+    transition: transform .6s var(--ease);
+  }
+  .btn-primary:hover::before { transform: translateX(120%) skewX(-15deg); }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    color: #fff; font-size: 17px; font-weight: 700;
+    padding: 18px 34px; border-radius: 100px;
+    box-shadow: 0 16px 34px rgba(21,84,224,0.32);
+    border: none; cursor: pointer;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 22px 44px rgba(21,84,224,0.42); }
+  .btn-primary:active { transform: translateY(-1px) scale(.98); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff; color: var(--text); font-size: 17px; font-weight: 700;
+    padding: 18px 34px; border-radius: 100px;
+    border: 1px solid var(--border); cursor: pointer;
+    transition: transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease);
+  }
+  .btn-secondary:hover { transform: translateY(-3px); border-color: var(--blue-light); background: var(--bg-soft); }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 128px 0 88px; overflow: hidden; }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(21,84,224,0.10) 1.4px, transparent 1.4px);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 20%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 60% 55% at 50% 20%, #000 20%, transparent 75%);
+  }
+  .glow-tr {
+    position: absolute; top: -160px; right: -200px;
+    width: 560px; height: 560px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(53,113,255,0.22) 0%, rgba(53,113,255,0.06) 45%, rgba(53,113,255,0) 72%);
+    pointer-events: none; animation: floatBlob 14s ease-in-out infinite;
+  }
+  .glow-bl {
+    position: absolute; bottom: -200px; left: -220px;
+    width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(53,113,255,0.16) 0%, rgba(53,113,255,0) 70%);
+    pointer-events: none; animation: floatBlob 18s ease-in-out infinite reverse;
+  }
+  @keyframes floatBlob {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(-30px, 26px) scale(1.06); }
+  }
+  .cursor-glow {
+    position: absolute; width: 480px; height: 480px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(76,140,255,0.14), transparent 70%);
+    pointer-events: none; z-index: 0;
+    transform: translate(-50%,-50%);
+    opacity: 0; transition: opacity .4s;
+  }
+  .hero-inner { position: relative; z-index: 1; text-align: center; max-width: 780px; margin: 0 auto; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(53,113,255,0.10);
+    border: 1px solid rgba(53,113,255,0.25);
+    color: var(--blue); font-size: 14px; font-weight: 600;
+    padding: 9px 18px; border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .tag .dot { width: 8px; height: 8px; border-radius: 50%; background: #2E7D32; box-shadow: 0 0 0 0 rgba(46,125,50,.5); animation: pulseDot 2s infinite; }
+  @keyframes pulseDot {
+    0% { box-shadow: 0 0 0 0 rgba(46,125,50,.45); }
+    70% { box-shadow: 0 0 0 7px rgba(46,125,50,0); }
+    100% { box-shadow: 0 0 0 0 rgba(46,125,50,0); }
+  }
+  h1 {
+    font-size: 60px; font-weight: 800; line-height: 1.12; letter-spacing: -2px;
+    margin: 0 0 24px;
+  }
+  h1 span {
+    background: linear-gradient(120deg, var(--blue-light), var(--blue));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.sub {
+    font-size: 20px; color: var(--text-secondary); line-height: 1.6;
+    max-width: 620px; margin: 0 auto 40px;
+  }
+  .hero-ctas { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 64px; }
+  .stats-row {
+    display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center; padding: 18px 30px; border-radius: 20px;
+    background: rgba(255,255,255,0.6); border: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .stat:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(15,35,90,0.08); }
+  .stat .n { font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--blue); letter-spacing: -1px; }
+  .stat .l { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+
+  /* ---------- Section heading ---------- */
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .section-head h2 { font-size: 40px; font-weight: 800; letter-spacing: -1.2px; margin: 16px 0 14px; }
+  .section-head h2 span { color: var(--blue); }
+  .section-head p { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .section-pad { padding: 100px 0; }
+  .section-pad.soft { background: var(--bg-soft); }
+
+  /* ---------- Reasons grid ---------- */
+  .reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .reason-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 24px;
+    padding: 32px 28px; box-shadow: 0 16px 40px rgba(15,35,90,0.06);
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s var(--ease);
+  }
+  .reason-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 26px 54px rgba(15,35,90,0.14);
+    border-color: rgba(76,140,255,0.35);
+  }
+  .reason-card .icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    transition: transform .35s var(--ease);
+  }
+  .reason-card:hover .icon { transform: scale(1.1) rotate(-4deg); }
+  .reason-card .icon svg { width: 28px; height: 28px; }
+  .reason-card h3 { font-size: 20px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.3px; }
+  .reason-card p { font-size: 15px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+
+  /* ---------- Modules grid ---------- */
+  .modules { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .module {
+    background: #fff; border: 1px solid var(--border); border-radius: 18px;
+    padding: 22px 18px; display: flex; align-items: center; gap: 14px;
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+  }
+  .module:hover { transform: translateY(-5px); box-shadow: 0 16px 32px rgba(15,35,90,0.10); border-color: rgba(76,140,255,0.3); }
+  .module .n {
+    flex: 0 0 auto; width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    color: #fff; font-size: 16px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .module .t { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+  /* ---------- Path timeline ---------- */
+  .path { max-width: 760px; margin: 0 auto; }
+  .path-step { position: relative; display: flex; gap: 26px; padding-bottom: 48px; }
+  .path-step:last-child { padding-bottom: 0; }
+  .path-line { position: absolute; left: 27px; top: 60px; bottom: -2px; width: 2px; background: linear-gradient(var(--border), var(--border)); }
+  .path-step:last-child .path-line { display: none; }
+  .path-num {
+    flex: 0 0 auto; width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    color: #fff; font-size: 22px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 22px rgba(21,84,224,0.28); z-index: 1;
+    transition: transform .3s var(--ease);
+  }
+  .path-step:hover .path-num { transform: scale(1.1); }
+  .path-body .t { font-size: 20px; font-weight: 700; }
+  .path-body .d { font-size: 15px; color: var(--text-secondary); margin-top: 4px; }
+
+  /* ---------- Testimonials ---------- */
+  .testimonials { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .t-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 28px;
+    padding: 40px 36px; box-shadow: 0 20px 50px rgba(15,35,90,0.08);
+    position: relative; overflow: hidden;
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .t-card:hover { transform: translateY(-6px) rotate(-0.3deg); box-shadow: 0 30px 64px rgba(15,35,90,0.14); }
+  .t-card::after {
+    content: '\201D'; position: absolute; top: -30px; right: 20px;
+    font-family: Georgia, serif; font-size: 160px; color: rgba(76,140,255,0.06);
+    line-height: 1; pointer-events: none;
+  }
+  .t-card .stars { display: flex; gap: 6px; margin-bottom: 20px; position: relative; z-index: 1; }
+  .t-card .stars svg { width: 20px; height: 20px; }
+  .t-card .quote { font-size: 18px; line-height: 1.55; color: #1B2436; margin-bottom: 28px; position: relative; z-index: 1; }
+  .t-card .quote b { font-weight: 700; }
+  .t-author { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+  .t-author .avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    color: #fff; font-size: 18px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .t-author .name { font-size: 15px; font-weight: 700; }
+  .t-author .meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ---------- Dark section texture ---------- */
+  .noise-dark { position: relative; }
+  .noise-dark::before {
+    content: ''; position: absolute; inset: 0; opacity: 0.5; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* ---------- Certificate ---------- */
+  .cert-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .cert-visual {
+    background: linear-gradient(160deg, #10182E, #0B1220);
+    border-radius: 32px; padding: 48px; position: relative; overflow: hidden;
+    transition: transform .4s var(--ease);
+  }
+  .cert-visual:hover { transform: perspective(800px) rotateX(2deg) rotateY(-2deg) translateY(-4px); }
+  .cert-visual::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(76,140,255,0.35), rgba(76,140,255,0) 70%);
+  }
+  .cert-badge {
+    position: relative; z-index: 1;
+    width: 88px; height: 88px; border-radius: 24px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px; box-shadow: 0 16px 34px rgba(21,84,224,0.4);
+  }
+  .cert-badge svg { width: 44px; height: 44px; }
+  .cert-visual h3 { position: relative; z-index: 1; color: #fff; font-size: 26px; font-weight: 700; margin: 0 0 12px; }
+  .cert-visual p { position: relative; z-index: 1; color: #B7C0DE; font-size: 15px; line-height: 1.6; margin: 0; }
+  .cert-list { list-style: none; padding: 0; margin: 0; }
+  .cert-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 16px; color: var(--text); line-height: 1.4;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    transition: transform .25s var(--ease);
+  }
+  .cert-list li:hover { transform: translateX(6px); }
+  .cert-list li:last-child { border-bottom: none; }
+  .cert-list svg { flex: 0 0 auto; width: 22px; height: 22px; margin-top: 1px; }
+
+  /* ---------- Pricing ---------- */
+  .price-card-wrap { max-width: 480px; margin: 0 auto; padding: 2px; border-radius: 34px;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue), var(--blue-pale));
+    background-size: 200% 200%; animation: gradientShift 6s ease infinite;
+    box-shadow: 0 30px 70px rgba(21,84,224,0.25);
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .price-card {
+    background: linear-gradient(160deg, #10182E, #0B1220);
+    border-radius: 32px; padding: 52px 44px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .price-card::before {
+    content: ''; position: absolute; top: -140px; left: -100px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(76,140,255,0.30), rgba(76,140,255,0) 70%);
+  }
+  .price-card .label { position: relative; z-index: 1; color: #7EACFF; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; }
+  .price-card .amount { position: relative; z-index: 1; font-family: var(--font-display); color: #fff; font-size: 68px; font-weight: 800; letter-spacing: -2px; }
+  .price-card .amount span { font-size: 22px; font-weight: 600; color: #8A94B8; }
+  .price-card .desc { position: relative; z-index: 1; color: #B7C0DE; font-size: 15px; margin: 10px 0 32px; }
+  .price-list { position: relative; z-index: 1; list-style: none; padding: 0; margin: 0 0 36px; text-align: left; }
+  .price-list li { display: flex; align-items: center; gap: 12px; color: #E4E8F5; font-size: 15px; padding: 10px 0; }
+  .price-list svg { width: 20px; height: 20px; flex: 0 0 auto; }
+  .price-card .btn-primary { position: relative; z-index: 1; width: 100%; justify-content: center; }
+
+  /* ---------- FAQ ---------- */
+  .faq { max-width: 760px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 26px 0; transition: padding-left .25s var(--ease); }
+  .faq-item summary { font-size: 18px; font-weight: 700; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .plus { font-size: 22px; color: var(--blue); font-weight: 400; transition: transform .3s var(--ease); }
+  .faq-item[open] summary .plus { transform: rotate(45deg); }
+  .faq-item[open] { padding-left: 8px; }
+  .faq-item p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; margin: 14px 0 0; }
+
+  /* ---------- Footer CTA ---------- */
+  .final-cta { text-align: center; padding: 110px 0; }
+  .final-cta h2 { font-size: 44px; font-weight: 800; letter-spacing: -1.2px; margin: 0 0 18px; }
+  .final-cta h2 span { color: var(--blue); }
+  .final-cta p { font-size: 17px; color: var(--text-secondary); margin: 0 0 36px; }
+
+  footer { background: var(--dark); padding: 56px 0 32px; }
+  .footer-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.10); position: relative; z-index: 1; }
+  footer .logo .word .top { color: #fff; }
+  footer .logo .word .bottom { color: #6B77A0; }
+  .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+  .footer-links a { font-size: 14px; color: #B7C0DE; font-weight: 600; transition: color .2s; }
+  .footer-links a:hover { color: #fff; }
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 24px; position: relative; z-index: 1; }
+  .footer-bottom p { font-size: 13px; color: #6B77A0; margin: 0; }
+  .footer-bottom a { transition: color .2s; }
+  .footer-bottom a:hover { color: #fff !important; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .burger { display: flex; }
+    h1 { font-size: 42px; }
+    .hero p.sub { font-size: 18px; }
+    .reasons { grid-template-columns: repeat(2, 1fr); }
+    .modules { grid-template-columns: repeat(2, 1fr); }
+    .testimonials { grid-template-columns: 1fr; }
+    .cert-wrap { grid-template-columns: 1fr; gap: 32px; }
+    .stats-row { gap: 14px; }
+    .stat { padding: 14px 20px; }
+    .section-head h2 { font-size: 30px; }
+    .cursor-glow { display: none; }
+  }
+  @media (max-width: 560px) {
+    .reasons { grid-template-columns: 1fr; }
+    .modules { grid-template-columns: 1fr; }
+    h1 { font-size: 34px; letter-spacing: -1.2px; }
+    .price-card { padding: 40px 26px; }
+    .hero-ctas { flex-direction: column; width: 100%; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <div class="logo">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 4h7a5 5 0 0 1 0 10h-4v6H6V4Zm3 3v4h4a2 2 0 0 0 0-4H9Z" fill="#fff"/></svg>
+      </div>
+      <div class="word"><div class="top">profitclubai</div><div class="bottom">academy</div></div>
+    </div>
+    <nav class="nav-links">
+      <a href="#reasons">Почему мы</a>
+      <a href="#modules">Программа</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#certificate">Сертификат</a>
+      <a href="#price">Цена</a>
+    </nav>
+    <a class="nav-cta" href="https://t.me/smmars1" target="_blank" rel="noopener">Вступить</a>
+    <button class="burger" id="burgerBtn" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#reasons">Почему мы</a>
+    <a href="#modules">Программа</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#certificate">Сертификат</a>
+    <a href="#price">Цена</a>
+  </div>
+</header>
+
+<section class="hero" id="heroSection">
+  <div class="hero-bg"></div>
+  <div class="glow-tr"></div>
+  <div class="glow-bl"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="wrap hero-inner">
+    <div class="tag reveal"><span class="dot"></span>Академия для тех, кто хочет зарабатывать с ИИ</div>
+    <h1 class="reveal">Научись зарабатывать с <span>нейросетями</span> за 3 недели</h1>
+    <p class="sub reveal">10 разделов, готовые материалы и именной сертификат. Понятно, без воды и с доступом навсегда — всего за 1500 ₽.</p>
+    <div class="hero-ctas reveal">
+      <a class="btn-primary" href="https://t.me/smmars1" target="_blank" rel="noopener">Начать обучение →</a>
+      <button class="btn-secondary" onclick="location.href='#modules'">Смотреть программу</button>
+    </div>
+    <div class="stats-row reveal">
+      <div class="stat"><div class="n" data-count="100" data-suffix="+">0</div><div class="l">учеников</div></div>
+      <div class="stat"><div class="n" data-count="4.9" data-suffix="★">0</div><div class="l">рейтинг</div></div>
+      <div class="stat"><div class="n">3 нед.</div><div class="l">до первого дохода</div></div>
+      <div class="stat"><div class="n" data-count="1500" data-suffix=" ₽">0</div><div class="l">доступ навсегда</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="reasons">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="tag"><span class="dot"></span>Почему выбирают нас</div>
+      <h2>5 причин пройти обучение <span>именно у нас</span></h2>
+      <p>Коротко о том, что делает нашу академию удобной и понятной с первого дня.</p>
+    </div>
+    <div class="reasons reveal-stagger">
+      <div class="reason-card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 3H19a2 2 0 0 1 2 2v7.5L11.5 22 2 12.5 11.5 3Z"/><circle cx="15.5" cy="8.5" r="1.2" fill="#fff" stroke="none"/></svg></div>
+        <h3>Доступ навсегда за 1500 ₽</h3>
+        <p>Платишь один раз и пользуешься всеми материалами без ограничений по времени.</p>
+      </div>
+      <div class="reason-card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="#fff"/></svg></div>
+        <h3>Никакой воды</h3>
+        <p>Только конкретная информация и практические шаги — всё по делу.</p>
+      </div>
+      <div class="reason-card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg></div>
+        <h3>10 разделов с материалами</h3>
+        <p>Всё необходимое собрано в одном месте — ничего искать не нужно.</p>
+      </div>
+      <div class="reason-card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M15 3v4h4"/><path d="M8.5 12.5h7M8.5 16h7"/></svg></div>
+        <h3>Готовые материалы и шаблоны</h3>
+        <p>Берёшь и сразу применяешь, не тратя время на подготовку с нуля.</p>
+      </div>
+      <div class="reason-card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9.3 9.2l1.7 1.7 3.4-3.6"/><path d="M8.6 14.3 6 21l6-3 6 3-2.6-6.7"/></svg></div>
+        <h3>Именной сертификат</h3>
+        <p>Клиенты доверяют специалистам с сертификатом намного больше.</p>
+      </div>
+      <div class="reason-card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21c0-4.2 3.6-7.2 8-7.2s8 3 8 7.2"/><circle cx="12" cy="8" r="4"/></svg></div>
+        <h3>Поддержка на каждом шаге</h3>
+        <p>Отвечаем на любые вопросы во время обучения и после него.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad soft" id="modules">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="tag"><span class="dot"></span>Программа обучения</div>
+      <h2>Всё, что <span>внутри</span> курса</h2>
+      <p>10 разделов — от базы до масштабирования и сертификации.</p>
+    </div>
+    <div class="modules reveal-stagger">
+      <div class="module"><div class="n">1</div><div class="t">Знакомство и база</div></div>
+      <div class="module"><div class="n">2</div><div class="t">Инструменты и нейросети</div></div>
+      <div class="module"><div class="n">3</div><div class="t">Генерация контента</div></div>
+      <div class="module"><div class="n">4</div><div class="t">Визуал и видео</div></div>
+      <div class="module"><div class="n">5</div><div class="t">Стратегия продвижения</div></div>
+      <div class="module"><div class="n">6</div><div class="t">Контент-план</div></div>
+      <div class="module"><div class="n">7</div><div class="t">Продвижение на практике</div></div>
+      <div class="module"><div class="n">8</div><div class="t">Анализ и оптимизация</div></div>
+      <div class="module"><div class="n">9</div><div class="t">Масштабирование</div></div>
+      <div class="module"><div class="n">10</div><div class="t">Сертификация</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="tag"><span class="dot"></span>Твой путь</div>
+      <h2>От старта до <span>первых денег</span></h2>
+      <p>Средний путь ученика от вступления до первого дохода.</p>
+    </div>
+    <div class="path reveal">
+      <div class="path-step"><div class="path-line"></div><div class="path-num">1</div><div class="path-body"><div class="t">Вступление в академию</div><div class="d">Доступ навсегда за 1500 ₽</div></div></div>
+      <div class="path-step"><div class="path-line"></div><div class="path-num">2</div><div class="path-body"><div class="t">Обучение по 10 разделам</div><div class="d">Понятно, коротко, без воды</div></div></div>
+      <div class="path-step"><div class="path-line"></div><div class="path-num">3</div><div class="path-body"><div class="t">Практика на реальных задачах</div><div class="d">Готовые материалы и шаблоны</div></div></div>
+      <div class="path-step"><div class="path-num">4</div><div class="path-body"><div class="t">Первый доход</div><div class="d">В среднем через 3 недели после старта</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad soft" id="reviews">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="tag"><span class="dot"></span>Реальные отзывы</div>
+      <h2>Что говорят <span>наши ученики</span></h2>
+      <p>Отзывы учениц, которые уже проходят обучение в академии.</p>
+    </div>
+    <div class="testimonials reveal-stagger">
+      <div class="t-card">
+        <div class="stars">
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+        </div>
+        <div class="quote">«Вступила примерно 3 недели назад, и за этот срок освоила просто <b>нереальный навык</b>, и заработала свои первые <b>28 000 ₽</b>. Спасибо за такие уроки — понятные, и в любом вопросе помогали.»</div>
+        <div class="t-author">
+          <div class="avatar">А</div>
+          <div><div class="name">Ученица академии</div><div class="meta">В клубе 3 недели · доход 28 000 ₽</div></div>
+        </div>
+      </div>
+      <div class="t-card">
+        <div class="stars">
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+        </div>
+        <div class="quote">«Хочу сказать вам спасибо за такой труд, я даже не ожидала, что обучение, которое мне казалось очень бюджетным, будет настолько <b>ценным для меня</b>. Инфа без воды, и в таком количестве это огонь просто, вы крутые.»</div>
+        <div class="t-author">
+          <div class="avatar">М</div>
+          <div><div class="name">Ученица академии</div><div class="meta">Личные сообщения</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="certificate">
+  <div class="wrap">
+    <div class="cert-wrap">
+      <div class="cert-visual reveal">
+        <div class="cert-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9.3 9.2l1.7 1.7 3.4-3.6"/><path d="M8.6 14.3 6 21l6-3 6 3-2.6-6.7"/></svg>
+        </div>
+        <h3>Именной сертификат по окончании</h3>
+        <p>Подтверждает освоенные навыки работы с нейросетями и AI-инструментами по программе академии.</p>
+      </div>
+      <div class="reveal">
+        <div class="tag"><span class="dot"></span>Подтверждённые навыки</div>
+        <h2 style="font-size:34px; font-weight:800; letter-spacing:-1px; margin:16px 0 20px;">Сертификат, который <span style="color:var(--blue)">повышает доверие</span></h2>
+        <ul class="cert-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#1554E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Работа своими инструментами и нейросетями</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#1554E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Генерация текстового, визуального и видеоконтента</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#1554E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Составление стратегии продвижения</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#1554E0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Анализ, оптимизация и улучшение процессов</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad soft" id="price">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="tag"><span class="dot"></span>Тарифы</div>
+      <h2>Одна простая <span>цена</span></h2>
+      <p>Без скрытых платежей и подписок — платишь один раз.</p>
+    </div>
+    <div class="price-card-wrap reveal">
+      <div class="price-card">
+        <div class="label">Доступ навсегда</div>
+        <div class="amount">1500 <span>₽</span></div>
+        <div class="desc">Разовый платёж, без подписки</div>
+        <ul class="price-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#7EACFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>10 разделов с материалами</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#7EACFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Готовые шаблоны и чек-листы</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#7EACFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Именной сертификат по окончании</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#7EACFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Доступ навсегда, без ограничений</li>
+        </ul>
+        <a class="btn-primary" href="https://t.me/smmars1" target="_blank" rel="noopener">Оплатить и получить доступ →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="tag"><span class="dot"></span>Вопросы и ответы</div>
+      <h2>Частые <span>вопросы</span></h2>
+    </div>
+    <div class="faq reveal">
+      <details class="faq-item" open>
+        <summary>Нужен ли опыт, чтобы начать?<span class="plus">+</span></summary>
+        <p>Нет, программа рассчитана на новичков — объясняем всё простым языком, без сложных терминов.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Сколько времени занимает обучение?<span class="plus">+</span></summary>
+        <p>В среднем ученики проходят программу за 2–3 недели, но материалы остаются с доступом навсегда.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Как я получу сертификат?<span class="plus">+</span></summary>
+        <p>Сертификат выдаётся автоматически после прохождения всех 10 разделов программы.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Можно ли учиться с телефона?<span class="plus">+</span></summary>
+        <p>Да, все материалы доступны с любого устройства — телефона, планшета или компьютера.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta wrap reveal">
+  <h2>Готов(а) освоить <span>новый навык</span>?</h2>
+  <p>Вступи в академию сегодня и начни путь к первому доходу с ИИ.</p>
+  <a class="btn-primary" href="https://t.me/smmars1" target="_blank" rel="noopener">Написать в Telegram →</a>
+</section>
+
+<footer class="noise-dark">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="logo">
+        <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h7a5 5 0 0 1 0 10h-4v6H6V4Zm3 3v4h4a2 2 0 0 0 0-4H9Z" fill="#fff"/></svg></div>
+        <div class="word"><div class="top">profitclubai</div><div class="bottom">academy</div></div>
+      </div>
+      <div class="footer-links">
+        <a href="#reasons">Почему мы</a>
+        <a href="#modules">Программа</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#certificate">Сертификат</a>
+        <a href="#price">Цена</a>
+        <a href="https://t.me/smmars1" target="_blank" rel="noopener" style="color:#7EACFF;">Написать в Telegram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 profitclubai academy. Все права защищены.</p>
+      <p>Оплата и связь: <a href="https://t.me/smmars1" target="_blank" rel="noopener" style="color:#B7C0DE;">t.me/smmars1</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const burgerBtn = document.getElementById('burgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burgerBtn.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // Header shrink + scroll progress
+  const header = document.getElementById('siteHeader');
+  const progressBar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 12);
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progressBar.style.width = scrolled + '%';
+  }, { passive: true });
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  revealEls.forEach(el => io.observe(el));
+
+  // Count-up stats
+  const counters = document.querySelectorAll('.stat .n[data-count]');
+  const countIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const isDecimal = target % 1 !== 0;
+      const duration = 1200;
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const val = target * eased;
+        el.textContent = (isDecimal ? val.toFixed(1) : Math.round(val).toLocaleString('ru-RU')) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      countIo.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => countIo.observe(el));
+
+  // Cursor glow in hero
+  const heroSection = document.getElementById('heroSection');
+  const cursorGlow = document.getElementById('cursorGlow');
+  if (window.matchMedia('(hover: hover)').matches) {
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      cursorGlow.style.left = (e.clientX - rect.left) + 'px';
+      cursorGlow.style.top = (e.clientY - rect.top) + 'px';
+      cursorGlow.style.opacity = '1';
+    });
+    heroSection.addEventListener('mouseleave', () => { cursorGlow.style.opacity = '0'; });
+  }
+</script>
+
+</body>
+</html>
